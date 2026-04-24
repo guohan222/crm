@@ -1,8 +1,8 @@
+from stark.service.stark import StarkConfig,get_choice_text
+
+
+
 from django.http import HttpResponse
-
-from stark.service.stark import StarkConfig
-
-
 from django.urls import path,reverse
 from django.utils.safestring import mark_safe
 
@@ -34,17 +34,9 @@ class UserInfoConfig(StarkConfig):
         return mark_safe(f'<a href="{url}">{obj.name}</a>')
 
 
-    def display_gender(self, obj=None, header=False):
-        if header:
-            return '性别'
-
-        return obj.get_gender_display()
-
-
-
     list_display = [
         display_detail,
-        display_gender,
+        get_choice_text('gender','性别'),
         'phone',
         'email',
         'depart',

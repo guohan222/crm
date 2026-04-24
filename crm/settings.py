@@ -123,6 +123,24 @@ USE_TZ = False
 
 STATIC_URL = 'static/'
 
+
+
+# ################### RBAC组件相关配置 ###################
+
+#
+USER_MODEL_PATH = 'web.models.UserInfo'
+
+#
+PERMISSION_SESSION_KEY = 'permission_url_key'
+MENU_SESSION_KEY = 'menu_url_key'
+
+
+VALID_URL = [
+    '/login/',
+    '/admin/.*'
+]
+
+
 # 路由自动发现，需要排除的 URL 黑名单
 AUTO_DISCOVER_EXCLUDE = [
     '/admin/.*'

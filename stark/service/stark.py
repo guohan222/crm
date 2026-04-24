@@ -13,6 +13,25 @@ from django.http import HttpResponse, JsonResponse
 from django.db.models import ForeignKey, ManyToManyField
 
 
+
+def get_choice_text(field,head):
+    """
+    获取对象choices字段对应的内容
+    :param field: choice字段名
+    :param head: 表头名称
+    :return:
+    """
+    def inner(self,obj=None, header=False):
+        if header:
+            return head
+
+        choice_field_text = f'get_{field}_display'
+        return getattr(obj,choice_field_text)()
+    return inner
+
+
+
+
 class SearchGroupRow(object):
 
     def __init__(self, title, queryset_or_tuple, option, query_dict):

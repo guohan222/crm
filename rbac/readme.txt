@@ -63,7 +63,21 @@
     如果，对原有项目使用rbac组件，则需要将rbac里面的字段允许为空后在执行迁移，迁移成功后再进行数据手搓
 
 
-7. 最终进行rbac中间件的注册，实现权限验证
+7. 项目settings中配置白名单
+        VALID_URL = [
+            '/login/',
+            '/admin/.*'
+        ]
+
+8. 项目settings中配置USER_MODEL_PATH = 'web.models.UserInfo'
+
+
+9. 配置PERMISSION_SESSION_KEY、MENU_SESSION_KEY
+        PERMISSION_SESSION_KEY = 'permission_url_key'
+        MENU_SESSION_KEY = 'menu_url_key'
+
+
+9. 最终进行rbac中间件的注册，实现权限验证
 
 
 
