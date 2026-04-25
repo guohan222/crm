@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+
 from stark.form.bootstrap import BootStrap
 from stark.service.stark import StarkConfig, get_choice_text, Option
 
@@ -5,7 +7,14 @@ from stark.service.stark import StarkConfig, get_choice_text, Option
 from web import models
 
 
+
 from django import forms
+from django.db import transaction
+from django.conf import settings
+
+
+
+
 
 
 class CustomerConfig(StarkConfig):
@@ -59,7 +68,47 @@ class PublicCustomerConfig(StarkConfig):
         val.remove(StarkConfig.display_del)
         return val
 
+    action_list =[]
+
+    # 批量申请客户到私户
+    def multi_apply(self, request):
+        pk_list = request.POST.getlist('pk')
+
+        # 假设当前用户id为1
+        current_user_id = 1
+
+        # 计算当前销售手里 未报名的私户数量
+        private_customer_count = models.Customer.objects.filter(consultant_id=current_user_id,status=2).count()
+
+        # 判断该销售是否还能继续申请公户到自己手里
+        if (private_customer_count + len(pk_list)) > settings.MAX_PRIVATE_CUSTOMER_COUNT:
+            return HttpResponse('要这么多干鸡毛')
+
+        # 解决“并发抢单”问题，销售 A 和销售 B 同时盯着公海里的“马云”，同时勾选并点击申请，到底算谁的？
+        # 加排他锁
+        try:
+            flag = False
+            with transaction.atomic():
+                # 排他锁: .select_for_update()
+                origin_queryset = models.Customer.objects.filter(id__in=pk_list,status=2,consultant_id__isnull=True,).select_for_update()
+
+                if len(pk_list) == len(origin_queryset):
+                    origin_queryset.update(consultant_id=current_user_id)
+                    flag = True
+
+            if not flag:
+                return HttpResponse('手速还得练')
+
+        except Exception as e:
+            print(str(e))
+
+
+    multi_apply.text = '批量申请'
+    action_list.append(multi_apply)
+
+
     list_display = [
+        StarkConfig.display_checkbox,
         'name',
         'qq',
         get_choice_text('status', '状态'),
@@ -133,9 +182,24 @@ class PrivateCustomerConfig(StarkConfig):
         val.remove(StarkConfig.display_del)
         return val
 
+    action_list = []
+
+    # 将客户从私户移除至公户
+    def multi_remove(self, request):
+        pk_list = request.POST.getlist('pk')
+        # 假设当前用户id为1
+        current_user_id = 1
+        self.model_class.objects.filter(id__in=pk_list,consultant_id=current_user_id,).update(consultant=None)
+
+    multi_remove.text = '移除客户'
+    action_list.append(multi_remove)
+
+
+
     model_form_class = PrivateModelForm
 
     list_display = [
+        StarkConfig.display_checkbox,
         'name',
         'qq',
         get_choice_text('status','状态'),
