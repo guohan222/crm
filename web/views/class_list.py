@@ -8,7 +8,7 @@ class ClassListConfig(StarkConfig):
 
         return f'{obj.course.name}-{obj.semester}期'
 
-    list_display = ['id',display_title,'school','start_date',StarkConfig.display_edit_del,]
+    list_display = ['id',display_title,'school','start_date',]
     search_group = [
         Option(field='school',is_choice=False,is_multi=False,text_func=lambda x:x.title,value_func=lambda x:x.pk),
         Option(field='course',is_choice=False,is_multi=False,text_func=lambda x:x.name,value_func=lambda x:x.pk)

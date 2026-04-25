@@ -40,5 +40,4 @@ class UserInfoConfig(StarkConfig):
         'phone',
         'email',
         'depart',
-        StarkConfig.display_edit_del,
     ]
