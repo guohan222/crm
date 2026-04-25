@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+
+
 
 from stark.form.bootstrap import BootStrap
 from stark.service.stark import StarkConfig, get_choice_text, Option
@@ -11,6 +12,9 @@ from web import models
 from django import forms
 from django.db import transaction
 from django.conf import settings
+from django.http import HttpResponse
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 
 
@@ -18,12 +22,23 @@ from django.conf import settings
 
 
 class CustomerConfig(StarkConfig):
+
+
+    def display_record(self, obj=None, header=False):
+        if header:
+            return '跟进记录'
+
+        record_url_name = f'stark:web_consultrecord_changelist'
+        record_url = reverse(record_url_name)
+        return mark_safe(f'<a href="{record_url}?cid={obj.id}">查看跟进</a>'  )
+
     list_display = [
         'name',
         'qq',
         get_choice_text('status', '状态'),
         get_choice_text('gender', '性别'),
         get_choice_text('source', '来源'),
+        display_record
     ]
 
     order_by = ['-id']
@@ -59,6 +74,17 @@ class CustomerConfig(StarkConfig):
 # 公户
 
 class PublicCustomerConfig(StarkConfig):
+
+    def display_record(self, obj=None, header=False):
+        if header:
+            return '跟进记录'
+
+        record_url_name = f'stark:web_consultrecord_changelist'
+        record_url = reverse(record_url_name)
+        return mark_safe(f'<a href="{record_url}?cid={obj.id}">查看跟进</a>'  )
+
+
+
 
     def get_queryset(self):
         return self.model_class.objects.filter(consultant__isnull=True)
@@ -114,6 +140,7 @@ class PublicCustomerConfig(StarkConfig):
         get_choice_text('status', '状态'),
         get_choice_text('gender', '性别'),
         get_choice_text('source', '来源'),
+        display_record
     ]
 
     order_by = ['-id']
@@ -161,6 +188,14 @@ class PrivateModelForm(BootStrap,forms.ModelForm):
 
 class PrivateCustomerConfig(StarkConfig):
 
+    def display_record(self, obj=None, header=False):
+        if header:
+            return '跟进记录'
+
+        record_url_name = f'stark:web_consultrecord_pri_changelist'
+        record_url = reverse(record_url_name)
+        return mark_safe(f'<a href="{record_url}?cid={obj.id}">查看跟进</a>'  )
+
     def save(self,form,is_modify=True,*args,**kwargs):
         # 假设当前用户id为1
         current_user_id = 1
@@ -205,6 +240,7 @@ class PrivateCustomerConfig(StarkConfig):
         get_choice_text('status','状态'),
         get_choice_text('gender','性别'),
         get_choice_text('source','来源'),
+        display_record
     ]
 
     order_by = ['-id']

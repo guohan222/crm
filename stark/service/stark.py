@@ -432,7 +432,7 @@ class StarkConfig(object):
             return render(request, 'stark/change.html', {'form': form, 'change_list_url': change_list_url})
         form = ModelFormClass(data=request.POST, instance=obj)
         if form.is_valid():
-            form.save()
+            self.save(form,)
             return redirect(change_list_url)
         return render(request, 'stark/change.html', {'form': form, 'change_list_url': change_list_url})
 

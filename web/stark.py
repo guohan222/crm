@@ -8,6 +8,8 @@ from web.views.userinfo import UserInfoConfig
 from web.views.class_list import ClassListConfig
 from web.views.course import CourseConfig
 from web.views.customer import CustomerConfig,PublicCustomerConfig,PrivateCustomerConfig
+from web.views.consult_record import ConsultRecordConfig,PriConsultRecordConfig
+
 
 
 
@@ -22,3 +24,5 @@ site.register(models.Course,CourseConfig)
 site.register(models.Customer,CustomerConfig)
 site.register(models.Customer,PublicCustomerConfig,'pub')
 site.register(models.Customer,PrivateCustomerConfig,'pri')
+site.register(models.ConsultRecord,ConsultRecordConfig)
+site.register(models.ConsultRecord,PriConsultRecordConfig,'pri')
