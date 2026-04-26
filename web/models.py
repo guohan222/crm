@@ -94,7 +94,7 @@ class Customer(models.Model):
     """
     客户表
     """
-    verbose_name_cn = '客户 列表'
+    verbose_name_cn = '客户列表'
     name = models.CharField(verbose_name='姓名', max_length=32)
     qq = models.CharField(verbose_name='联系方式', max_length=64, unique=True, help_text='QQ号/微信/手机号')
     status_choices = [
@@ -184,7 +184,64 @@ class ConsultRecord(models.Model):
     """
     客户跟进记录
     """
+    verbose_name_cn = '客户跟进记录'
     customer = models.ForeignKey(verbose_name="所咨询客户", to='Customer',on_delete=models.CASCADE)
     consultant = models.ForeignKey(verbose_name="跟踪人", to='UserInfo',on_delete=models.CASCADE)
     note = models.TextField(verbose_name="跟进内容")
     date = models.DateField(verbose_name="跟进日期", auto_now_add=True)
+
+
+
+class Student(models.Model):
+    """
+    学生表
+    """
+    verbose_name_cn = '学生列表'
+    customer = models.OneToOneField(verbose_name='客户信息', to='Customer',on_delete=models.CASCADE)
+    qq = models.CharField(verbose_name='QQ号', max_length=32)
+    mobile = models.CharField(verbose_name='手机号', max_length=32)
+    emergency_contract = models.CharField(verbose_name='紧急联系人电话', max_length=32)
+    class_list = models.ManyToManyField(verbose_name="已报班级", to='ClassList', blank=True)
+    student_status_choices = [
+        (1, "申请中"),
+        (2, "在读"),
+        (3, "毕业"),
+        (4, "退学")
+    ]
+    student_status = models.IntegerField(verbose_name="学员状态", choices=student_status_choices, default=1)
+    score = models.IntegerField(verbose_name='积分', default=100)
+    memo = models.TextField(verbose_name='备注', max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.customer.name
+
+
+class CourseRecord(models.Model):
+    """
+    上课记录表
+    """
+    verbose_name_cn = '上课记录'
+    class_object = models.ForeignKey(verbose_name="班级", to="ClassList",on_delete=models.CASCADE)
+    day_num = models.IntegerField(verbose_name="节次")
+    teacher = models.ForeignKey(verbose_name="讲师", to='UserInfo',on_delete=models.CASCADE)
+    date = models.DateField(verbose_name="上课日期", auto_now_add=True)
+
+    def __str__(self):
+        return "{0} day{1}".format(self.class_object, self.day_num)
+
+
+class StudyRecord(models.Model):
+    """
+    学生考勤记录
+    """
+    verbose_name_cn = '学生考勤记录'
+    course_record = models.ForeignKey(verbose_name="第几天课程", to="CourseRecord",on_delete=models.CASCADE)
+    student = models.ForeignKey(verbose_name="学员", to='Student',on_delete=models.CASCADE)
+    record_choices = (
+        ('checked', "已签到"),
+        ('vacate', "请假"),
+        ('late', "迟到"),
+        ('noshow', "缺勤"),
+        ('leave_early', "早退"),
+    )
+    record = models.CharField("上课纪录", choices=record_choices, default="checked", max_length=64)

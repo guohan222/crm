@@ -35,8 +35,6 @@ class PriModelFrom(BootStrap,forms.ModelForm):
 
 class PriConsultRecordConfig(StarkConfig):
 
-
-
     model_form_class = PriModelFrom
 
     def save(self, form, is_modify=True, *args, **kwargs):

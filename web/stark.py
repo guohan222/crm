@@ -9,6 +9,8 @@ from web.views.class_list import ClassListConfig
 from web.views.course import CourseConfig
 from web.views.customer import CustomerConfig,PublicCustomerConfig,PrivateCustomerConfig
 from web.views.consult_record import ConsultRecordConfig,PriConsultRecordConfig
+from web.views.student import StudentConfig
+from web.views.course_record import CourseRecordConfig
 
 
 
@@ -26,3 +28,5 @@ site.register(models.Customer,PublicCustomerConfig,'pub')
 site.register(models.Customer,PrivateCustomerConfig,'pri')
 site.register(models.ConsultRecord,ConsultRecordConfig)
 site.register(models.ConsultRecord,PriConsultRecordConfig,'pri')
+site.register(models.Student,StudentConfig)
+site.register(models.CourseRecord,CourseRecordConfig)
