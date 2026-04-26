@@ -30,7 +30,7 @@ class RbacMiddleware(MiddlewareMixin):
 
         # 4. 反向解析出URL的name
         try:
-            current_url_name = resolve(current_url).url_name
+            current_url_name = resolve(current_url).view_name
         except Exception:
             # 如果访问了一个连 URL 路由都没配的地址，直接 404
             current_url_name = None
