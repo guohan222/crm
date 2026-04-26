@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from stark.service.stark import site
+from web.views import account
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('rbac/', include('rbac.urls',namespace='rbac')),
     path('stark/', site.urls),
+    path('login/', account.login),
 ]
