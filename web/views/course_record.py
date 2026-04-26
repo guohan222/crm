@@ -10,8 +10,17 @@ from web import models
 
 
 from django import forms
+from django.urls import path, reverse
 from django.db import transaction
 from django.conf import settings
+
+
+
+
+class StudyRecordModelForm(BootStrap,forms.ModelForm):
+    class Meta:
+        model = models.StudyRecord
+        fields = '__all__'
 
 
 
@@ -22,6 +31,16 @@ class CourseRecordConfig(StarkConfig):
             return '上课记录'
         tpl = f'{obj.class_object}-day{obj.day_num}'
         return tpl
+
+    def display_attend(self, obj=None, header=False):
+        if header:
+            return '考勤'
+
+        name = f'stark:web_studyrecord_changelist'
+        url = reverse(name)
+        tpl = f'<a href="{url}?crid={obj.pk}">查看</a>'
+        return mark_safe(tpl)
+
 
     action_list = []
     def multi_init(self, request):
@@ -53,6 +72,4 @@ class CourseRecordConfig(StarkConfig):
     action_list.append(multi_init)
 
 
-
-
-    list_display = [StarkConfig.display_checkbox,display_title,]
+    list_display = [StarkConfig.display_checkbox,display_title,display_attend]
