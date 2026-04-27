@@ -22,6 +22,7 @@ class PermissionMixins(object):
 
     def get_add_btn(self):
         """劫持添加按钮，根据权限决定是否要进行展示，实现粒度控制到按钮"""
+        # 注意：Stark 的 url_name 生成通常是 property，不要加括号
         if self.has_permission(self.get_add_url_name):
             # 在多继承里，super() 不是简单地找“父类”，而是找 MRO 链条里的下一个类
             return super().get_add_btn()

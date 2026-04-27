@@ -10,6 +10,10 @@ def static_menu(request):
     """生成一级菜单"""
 
     menu_list = request.session.get(settings.MENU_SESSION_KEY)
+
+    if not menu_list:
+        menu_list = []
+
     # 选中
     for item in menu_list:
         reg = f'^{item['url']}$'
@@ -24,6 +28,9 @@ def menu(request):
     """生成二级菜单"""
 
     menu_dict = request.session.get(settings.MENU_SESSION_KEY)
+
+    if not menu_dict:
+        menu_dict = {}
 
     # 选则
     for item in menu_dict.values():
