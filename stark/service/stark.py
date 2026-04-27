@@ -13,6 +13,8 @@ from django.http import HttpResponse, JsonResponse
 from django.db.models import ForeignKey, ManyToManyField
 
 
+
+# 封装 model_class, config 与 prefix 的对应关系
 class ModelConfigMapping(object):
 
     def __init__(self, model_class, config, prefix):
@@ -23,7 +25,7 @@ class ModelConfigMapping(object):
 
 def get_choice_text(field, head):
     """
-    获取对象choices字段对应的内容
+    对于Stark组件中定义列时，choice如果想要显示中文信息，调用此方法即可
     :param field: choice字段名
     :param head: 表头名称
     :return:

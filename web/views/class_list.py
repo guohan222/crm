@@ -1,6 +1,8 @@
 from stark.service.stark import StarkConfig, Option
+from web.utils.mixins import PermissionMixins
 
-class ClassListConfig(StarkConfig):
+
+class ClassListConfig(PermissionMixins,StarkConfig):
 
     def display_title(self, obj=None, header=False):
         if header:

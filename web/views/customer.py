@@ -1,12 +1,9 @@
 
-
-
 from stark.form.bootstrap import BootStrap
 from stark.service.stark import StarkConfig, get_choice_text, Option
 
-
 from web import models
-
+from web.utils.mixins import PermissionMixins
 
 
 from django import forms
@@ -73,7 +70,7 @@ class CustomerConfig(StarkConfig):
 
 # 公户
 
-class PublicCustomerConfig(StarkConfig):
+class PublicCustomerConfig(PermissionMixins,StarkConfig):
 
     def display_record(self, obj=None, header=False):
         if header:
@@ -89,10 +86,6 @@ class PublicCustomerConfig(StarkConfig):
     def get_queryset(self):
         return self.model_class.objects.filter(consultant__isnull=True)
 
-    def get_list_display(self):
-        val = super().get_list_display()
-        val.remove(StarkConfig.display_del)
-        return val
 
     action_list =[]
 

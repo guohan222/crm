@@ -1,13 +1,10 @@
-from django.http import HttpResponse
-
 from stark.form.bootstrap import BootStrap
 from stark.service.stark import StarkConfig, get_choice_text, Option
 
-
 from web import models
+from web.utils.mixins import PermissionMixins
 
-
-
+from django.http import HttpResponse
 from django import forms
 from django.db import transaction
 from django.conf import settings
@@ -15,7 +12,7 @@ from django.conf import settings
 
 
 
-class StudentConfig(StarkConfig):
+class StudentConfig(PermissionMixins,StarkConfig):
 
     def display_class_list(self, obj=None, header=False):
         if header:

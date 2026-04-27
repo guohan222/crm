@@ -26,4 +26,4 @@ def login(request):
     # 用户权限信息的初始化
     init_permission(request,user)
 
-    return redirect('stark:web_customer_pub_changelist')
+    return redirect('stark:web_student_changelist')
